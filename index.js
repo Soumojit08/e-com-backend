@@ -14,7 +14,7 @@ app.use(express.json());
 app.use(express.urlencoded({ extended: true }));
 
 //Routes
-app.use("/data", dataRoutes);
+app.use("/api", dataRoutes);
 
 app.listen(port, (req, res) => {
   console.log(`Server Started at ${port}`);
