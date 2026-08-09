@@ -5,6 +5,11 @@ const getProductData = async (req, res) => {
   try {
     const products = await prisma.products.findMany({
       take: 20,
+      where: {
+        price: {
+          not: null,
+        },
+      },
     });
 
 
