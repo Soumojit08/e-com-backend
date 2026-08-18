@@ -9,5 +9,7 @@ router.get("/data-health", (req, res) => {
 
 // Get products from db
 router.get("/get-product", controllers.GetProductData);
+//get products with id
+router.get("/get-product/:id", controllers.GetProductById);
 
 export default router;
