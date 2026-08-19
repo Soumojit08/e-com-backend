@@ -12,4 +12,7 @@ router.get("/get-product", controllers.GetProductData);
 //get products with id
 router.get("/get-product/:id", controllers.GetProductById);
 
+//post product
+router.post("/add-product", controllers.AddProduct);
+
 export default router;

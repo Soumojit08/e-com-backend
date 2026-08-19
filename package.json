@@ -1,28 +1,40 @@
 {
   "name": "server",
   "version": "1.0.0",
-  "description": "",
+  "description": "E-commerce Backend",
   "main": "index.js",
   "scripts": {
-    "test": "echo \"Error: no test specified\" && exit 1",
+    "start": "node index.js",
     "dev": "nodemon index.js"
   },
-  "keywords": [],
+  "keywords": [
+    "api",
+    "backend"
+  ],
   "author": "Soumojit Banerjee",
-  "license": "ISC",
+  "license": "MIT",
   "type": "module",
-  "devDependencies": {
-    "nodemon": "^3.1.14",
-    "prisma": "5.22.0"
-  },
   "dependencies": {
-    "@prisma/adapter-pg": "5.22.0",
+    "@clerk/express": "^2.0.11",
     "@prisma/client": "5.22.0",
-    "cors": "^2.8.6",
-    "dotenv": "^17.4.2",
-    "express": "^5.2.1",
-    "http-status-codes": "^2.3.0",
-    "pg": "8.13.1",
-    "postgres": "^3.4.9"
+    "cloudinary": "^2.10.0",
+    "cookie-parser": "^1.4.7",
+    "cors": "^2.8.5",
+    "dotenv": "^16.3.1",
+    "express": "^4.18.2",
+    "express-rate-limit": "^8.3.2",
+    "express-validator": "^7.3.2",
+    "figlet": "^1.11.0",
+    "helmet": "^8.1.0",
+    "ioredis": "^5.10.1",
+    "morgan": "^1.10.1",
+    "multer": "^2.1.1",
+    "multer-storage-cloudinary": "^4.0.0",
+    "pg": "^8.20.0",
+    "socket.io": "^4.8.3"
+  },
+  "devDependencies": {
+    "nodemon": "^3.0.2",
+    "prisma": "5.22.0"
   }
 }
