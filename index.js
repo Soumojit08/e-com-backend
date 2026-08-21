@@ -1,26 +1,23 @@
 import express from "express";
 import dotenv from "dotenv";
 import figlet from "figlet";
-import {
-  clerkClient,
-  clerkMiddleware,
-  getAuth,
-  requireAuth,
-} from "@clerk/express";
+import { clerkMiddleware } from "@clerk/express";
 import cors from "cors";
 import dataRoutes from "./src/routes/data.route.js";
+import authRoutes from "./src/routes/auth.routes.js";
 
 const app = express();
 dotenv.config();
 
 //Middlewares
 app.use(cors());
+app.use(clerkMiddleware());
 app.use(express.json());
 app.use(express.urlencoded({ extended: true }));
-app.use(clerkMiddleware());
 
 //Routes
 app.use("/api", dataRoutes);
+app.use("/api/auth", authRoutes);
 
 const PORT = process.env.PORT || 4000;
 
