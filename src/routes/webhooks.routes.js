@@ -11,44 +11,89 @@ router.post(
     try {
       const event = await verifyWebhook(req);
 
-      const { id, first_name, last_name, email_addresses, phone_numbers } =
-        event.data;
+      if (event.type === "user.deleted") {
+        const { id } = event.data;
 
-      console.log(email_addresses);
+        await prisma.user.delete({
+          where: {
+            clerkId: id,
+          },
+        });
 
-      const primaryEmail = email_addresses.find(
-        (email) => email.id === event.data.primary_email_address_id,
-      );
+        return res.status(200).json({
+          success: true,
+          msg: "User deleted successfully",
+        });
+      }
 
-      const email = primaryEmail?.email_addresses;
+      if (event.type === "user.created" || event.type === "user.updated") {
+        const {
+          id,
+          first_name,
+          last_name,
+          email_addresses,
+          phone_numbers,
+          primary_email_address_id,
+          primary_phone_number_id,
+        } = event.data;
 
-      const primaryPhone = phone_numbers.find(
-        (phone) => phone.id === event.data.primary_phone_number_id,
-      );
+        const primaryEmail = email_addresses.find(
+          (email) => email.id === primary_email_address_id,
+        );
 
-      const phone = primaryPhone?.phone_number;
+        const email = primaryEmail?.email_address ?? null;
 
-      const name = [first_name, last_name].filter(Boolean).join(" ");
+        const primaryPhone = phone_numbers.find(
+          (phone) => phone.id === primary_phone_number_id,
+        );
 
-      await prisma.user.upsert({
-        where: {
-          clerkId: id,
-        },
-        create: {
-          clerkId: id,
-          email,
-          name: name || null,
-          phone_no: phone || null,
-        },
-        update: {
-          email,
-          name: name || null,
-          phone_no: phone || null,
-        },
-      });
+        const phone = primaryPhone?.phone_number ?? null;
 
-      return res.status(200).json({
-        success: true,
+        const name = [first_name, last_name].filter(Boolean).join(" ");
+
+        //create user
+        if (event.type === "user.created") {
+          await prisma.user.upsert({
+            where: {
+              clerkId: id,
+            },
+            create: {
+              clerkId: id,
+              email,
+              name: name || null,
+              phone_no: phone || null,
+            },
+            update: {
+              email,
+              name: name || null,
+              phone_no: phone || null,
+            },
+          });
+
+          return res.status(200).json({
+            success: true,
+            msg: "New user created",
+          });
+        } else {
+          //update user data
+          await prisma.user.update({
+            where: {
+              clerkId: id,
+            },
+            data: {
+              name: name || null,
+            },
+          });
+
+          return res.status(200).json({
+            success: true,
+            msg: "user data updated",
+          });
+        }
+      }
+      return res.status(503).json({
+        success: false,
+        msg: "Unmatched event ",
       });
     } catch (error) {
       console.error("Error verifying Clerk webhook:", error);
