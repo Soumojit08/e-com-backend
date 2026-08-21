@@ -81,7 +81,9 @@ router.post(
               clerkId: id,
             },
             data: {
+              email,
               name: name || null,
+              phone_no: phone || null,
             },
           });
 

@@ -1,5 +1,6 @@
 import express from "express";
 import controllers from "../controllers/index.controller.js";
+import requireAuth from "../middlewares/requireAuth.js";
 
 const router = express.Router();
 
@@ -13,6 +14,6 @@ router.get("/get-product", controllers.GetProductData);
 router.get("/get-product/:id", controllers.GetProductById);
 
 //post product
-router.post("/add-product", controllers.AddProduct);
+router.post("/add-product", requireAuth, controllers.AddProduct);
 
 export default router;

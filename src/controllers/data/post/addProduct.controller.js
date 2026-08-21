@@ -13,12 +13,28 @@ const addProduct = async (req, res) => {
       metadata_specs,
     } = req.body ?? {};
 
+    const parsedPrice = Number(price);
+
+    if (
+      !name ||
+      !category ||
+      price === undefined ||
+      price === null ||
+      price === "" ||
+      !Number.isFinite(parsedPrice)
+    ) {
+      return res.status(StatusCodes.BAD_REQUEST).json({
+        success: false,
+        msg: "name, category, and a valid price are required",
+      });
+    }
+
     const productItem = await prisma.products.create({
       data: {
         brand,
         category,
         name,
-        price,
+        price: parsedPrice,
         rating_count,
         image_url,
         metadata_specs,
