@@ -25,8 +25,8 @@ model User {
   id         BigInt    @id @default(autoincrement())
   clerkId    String    @unique
   name       String?
-  email      String    @unique
-  phone_no   String
+  email      String?    @unique
+  phone_no   String?
   role       Role      @default(USER)
   created_at DateTime  @default(now())
   addresses  Address[]

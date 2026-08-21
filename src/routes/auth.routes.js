@@ -3,6 +3,7 @@ import { getAuth } from "@clerk/express";
 
 const router = express.Router();
 
+// to test auth returns userId
 router.get("/test", (req, res) => {
   const { userId, isAuthenticated } = getAuth(req);
 
@@ -19,5 +20,4 @@ router.get("/test", (req, res) => {
     userId,
   });
 });
-
 export default router;
