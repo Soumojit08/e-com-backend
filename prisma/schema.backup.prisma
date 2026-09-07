@@ -17,7 +17,7 @@ model products {
   price          Decimal?    @db.Decimal(10, 2)
   rating_count   Int?
   image_url      String?
-  metadata_specs Json?
+  metadata_specs Json?       @db.JsonB
   orderItems     OrderItem[]
   cartItems      CartItem[]
 }
