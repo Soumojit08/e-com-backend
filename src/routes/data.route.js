@@ -22,7 +22,7 @@ router.post("/add-product", requireAuth, controllers.AddProduct);
 router.get("/cart", requireAuth, controllers.GetCartData);
 
 //Post (add / increase quantity)
-router.post("/cart/items  ", requireAuth, controllers.AddToCart);
+router.post("/cart/items", requireAuth, controllers.AddToCart);
 
 //Patch (change quantity)
 router.patch("/cart/items/:productId", requireAuth, controllers.UpdateCartItem);
