@@ -3,28 +3,26 @@ import prisma from "../../../lib/prisma.js";
 const getCartData = async (req, res) => {
   try {
     const clerkId = req.userId;
-    // 1. Find User
-    const user = await prisma.user.findUnique({
+    const cart = await prisma.cart.findFirst({
       where: {
-        clerkId: clerkId,
+        user: { clerkId },
       },
-    });
-    if (!user) {
-      return res.status(404).json({
-        status: "failed",
-        msg: "User not found",
-      });
-    }
-    // 2. Find Cart
-    const cart = await prisma.cart.findUnique({
-      where: {
-        userId: user.id,
-      },
-      // 3. Include cartItems + product
-      include: {
+      select: {
+        id: true,
+        userId: true,
         cartItems: {
-          include: {
-            product: true,
+          select: {
+            productId: true,
+            quantity: true,
+            product: {
+              select: {
+                name: true,
+                brand: true,
+                category: true,
+                price: true,
+                image_url: true,
+              },
+            },
           },
         },
       },
@@ -41,9 +39,7 @@ const getCartData = async (req, res) => {
       ...cart,
       userId: cart.userId.toString(),
     };
-    console.log("responseCart", responseCart);
-
-    // 4. Return response
+    // Return response
     return res.status(200).json({
       status: "success",
       msg: "Cart data fetched successfully",

@@ -13,26 +13,15 @@ const addToCart = async (req, res) => {
       });
     }
 
-    // 2. Find user
-    const user = await prisma.user.findUnique({
-      where: {
-        clerkId,
-      },
-    });
+    // These lookups are independent and can share one database round-trip.
+    const [user, product] = await Promise.all([
+      prisma.user.findUnique({ where: { clerkId } }),
+      prisma.products.findUnique({ where: { id: productId } }),
+    ]);
 
     if (!user) {
-      return res.status(404).json({
-        status: "failed",
-        msg: "User not found",
-      });
+      return res.status(404).json({ status: "failed", msg: "User not found" });
     }
-
-    // 3. Check product exists
-    const product = await prisma.products.findUnique({
-      where: {
-        id: productId,
-      },
-    });
 
     if (!product) {
       return res.status(404).json({
@@ -41,7 +30,7 @@ const addToCart = async (req, res) => {
       });
     }
 
-    // 4. Find or create cart
+    // Find or create cart.
     const cart = await prisma.cart.upsert({
       where: {
         userId: user.id,
@@ -52,47 +41,16 @@ const addToCart = async (req, res) => {
       },
     });
 
-    // 5. Check if product already exists in cart
-    const existingCartItem = await prisma.cartItem.findUnique({
-      where: {
-        cartId_productId: {
-          cartId: cart.id,
-          productId,
-        },
-      },
+    const cartItem = await prisma.cartItem.upsert({
+      where: { cartId_productId: { cartId: cart.id, productId } },
+      update: { quantity: { increment: quantity } },
+      create: { cartId: cart.id, productId, quantity },
     });
 
-    // 6. Update existing item
-    if (existingCartItem) {
-      const updatedCartItem = await prisma.cartItem.update({
-        where: {
-          id: existingCartItem.id,
-        },
-        data: {
-          quantity: existingCartItem.quantity + quantity,
-        },
-      });
-
-      return res.status(200).json({
-        status: "success",
-        msg: "Cart item quantity updated",
-        data: updatedCartItem,
-      });
-    }
-
-    // 7. Create new cart item
-    const newCartItem = await prisma.cartItem.create({
-      data: {
-        cartId: cart.id,
-        productId,
-        quantity,
-      },
-    });
-
-    return res.status(201).json({
+    return res.status(200).json({
       status: "success",
-      msg: "Item added to cart successfully",
-      data: newCartItem,
+      msg: "Cart item added successfully",
+      data: cartItem,
     });
   } catch (error) {
     console.error("Error adding to cart:", error);
