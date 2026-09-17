@@ -7,6 +7,7 @@ import updateCartItem from "./data/update/updateCartItem.controller.js";
 import removeCartItem from "./data/delete/removeCartItem.controller.js";
 import getWishList from "./data/get/getWishList.controller.js";
 import addToWishlist from "./data/post/addToWishList.controller.js";
+import removeWishListItem from "./data/delete/removeWishList.controller.js";
 
 const controllers = {
   GetProductData: getProductData,
@@ -18,6 +19,7 @@ const controllers = {
   RemoveCartItem: removeCartItem,
   GetWishlistData: getWishList,
   AddToWishlist: addToWishlist,
+  RemoveWishlistItem: removeWishListItem,
 };
 
 export default controllers;

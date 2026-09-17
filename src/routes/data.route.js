@@ -40,6 +40,10 @@ router.get("/wishlist", requireAuth, controllers.GetWishlistData);
 router.post("/wishlist/items", requireAuth, controllers.AddToWishlist);
 
 //Delete (remove item)
-// router.delete("/wishlist/items/:productId", requireAuth, controllers.RemoveFromWishlist);
+router.delete(
+  "/wishlist/items/:productId",
+  requireAuth,
+  controllers.RemoveWishlistItem,
+);
 
 export default router;
