@@ -30,4 +30,16 @@ router.patch("/cart/items/:productId", requireAuth, controllers.UpdateCartItem);
 //Delete (remove item)
 router.delete("/cart/items/:productId", requireAuth, controllers.RemoveCartItem);
 
+
+//wishlist routes
+
+//Get
+router.get("/wishlist", requireAuth, controllers.GetWishlistData);
+
+//Post (add item)
+router.post("/wishlist/items", requireAuth, controllers.AddToWishlist);
+
+//Delete (remove item)
+// router.delete("/wishlist/items/:productId", requireAuth, controllers.RemoveFromWishlist);
+
 export default router;
