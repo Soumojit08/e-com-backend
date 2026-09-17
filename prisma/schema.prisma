@@ -20,6 +20,7 @@ model products {
   metadata_specs Json?
   orderItems     OrderItem[]
   cartItems      CartItem[]
+  wishListItems  WishListItem[]
 }
 
 model User {
@@ -33,6 +34,7 @@ model User {
   addresses  Address[]
   orders     Order[]
   cart       cart?
+  wishList   WishList?
 }
 
 model cart {
@@ -40,6 +42,24 @@ model cart {
   userId    BigInt     @unique
   user      User       @relation(fields: [userId], references: [id])
   cartItems CartItem[]
+}
+
+model WishList {
+  id            Int            @id @default(autoincrement())
+  userId        BigInt         @unique
+  user          User           @relation(fields: [userId], references: [id])
+  wishListItems WishListItem[]
+}
+
+model WishListItem {
+  id         Int @id @default(autoincrement())
+  wishListId Int
+  productId  Int
+
+  wishList WishList @relation(fields: [wishListId], references: [id])
+  product  products @relation(fields: [productId], references: [id])
+
+  @@unique([wishListId, productId])
 }
 
 model CartItem {
