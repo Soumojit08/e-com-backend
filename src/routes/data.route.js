@@ -26,6 +26,10 @@ router.delete("/cart/items/:productId", requireAuth, controllers.RemoveCartItem)
 router.get("/addresses", requireAuth, controllers.GetUserAddresses);
 router.post("/addresses", requireAuth, controllers.SaveUserAddress);
 
+// payment routes
+router.post("/create-order", requireAuth, controllers.CreateRazorpayOrder);
+router.post("/verify-payment", requireAuth, controllers.VerifyRazorpayPayment);
+
 //wishlist routes
 
 //Get

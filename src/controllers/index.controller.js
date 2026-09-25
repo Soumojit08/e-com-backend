@@ -10,6 +10,8 @@ import addToWishlist from "./data/post/addToWishList.controller.js";
 import removeWishListItem from "./data/delete/removeWishList.controller.js";
 import getUserAddresses from "./data/get/getUserAddresses.controller.js";
 import saveUserAddress from "./data/post/saveUserAddress.controller.js";
+import createRazorpayOrder from "./payment/createOrder.controller.js";
+import verifyRazorpayPayment from "./payment/verifyPayment.controller.js";
 
 const controllers = {
   GetProductData: getProductData,
@@ -24,6 +26,8 @@ const controllers = {
   RemoveWishlistItem: removeWishListItem,
   GetUserAddresses: getUserAddresses,
   SaveUserAddress: saveUserAddress,
+  CreateRazorpayOrder: createRazorpayOrder,
+  VerifyRazorpayPayment: verifyRazorpayPayment,
 };
 
 export default controllers;

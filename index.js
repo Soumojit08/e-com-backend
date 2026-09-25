@@ -3,12 +3,14 @@ import dotenv from "dotenv";
 import figlet from "figlet";
 import { clerkMiddleware } from "@clerk/express";
 import cors from "cors";
+
+dotenv.config();
+
 import dataRoutes from "./src/routes/data.route.js";
 import authRoutes from "./src/routes/auth.routes.js";
 import webHookRoutes from "./src/routes/webhooks.routes.js";
 
 const app = express();
-dotenv.config();
 
 //Middlewares
 app.use(cors());
