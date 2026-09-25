@@ -79,6 +79,7 @@ model Address {
   city      String
   pincode   String
   country   String
+  phone     String?
   isDefault Boolean @default(false)
   userId    BigInt
   user      User    @relation(fields: [userId], references: [id])
