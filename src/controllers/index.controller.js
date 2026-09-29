@@ -12,6 +12,8 @@ import getUserAddresses from "./data/get/getUserAddresses.controller.js";
 import saveUserAddress from "./data/post/saveUserAddress.controller.js";
 import createRazorpayOrder from "./payment/createOrder.controller.js";
 import verifyRazorpayPayment from "./payment/verifyPayment.controller.js";
+import placeOrder from "./order/placeOrder.controller.js";
+import getOrders from "./order/getOrders.controller.js";
 
 const controllers = {
   GetProductData: getProductData,
@@ -28,6 +30,8 @@ const controllers = {
   SaveUserAddress: saveUserAddress,
   CreateRazorpayOrder: createRazorpayOrder,
   VerifyRazorpayPayment: verifyRazorpayPayment,
+  PlaceOrder: placeOrder,
+  GetOrders: getOrders,
 };
 
 export default controllers;

@@ -1,25 +1,45 @@
-import Razorpay from "razorpay";
-
-const razorpay = new Razorpay({
-  key_id: process.env.RAZORPAY_KEY_ID,
-  key_secret: process.env.RAZORPAY_KEY_SECRET,
-});
+import prisma from "../../lib/prisma.js";
+import createRazorpayClient from "../../lib/razorpay.js";
+import { getCheckoutCart, OrderFlowError } from "../order/order.service.js";
 
 const createRazorpayOrder = async (req, res) => {
   try {
-    const { amount, currency = "INR", receipt = "order_rcptid_1" } = req.body;
+    const { addressId, currency = "INR" } = req.body ?? {};
+    const parsedAddressId = Number(addressId);
 
-    if (!amount || Number(amount) < 100) {
+    if (!Number.isInteger(parsedAddressId) || parsedAddressId <= 0) {
       return res.status(400).json({
         success: false,
-        msg: "Amount must be at least 100 paise",
+        msg: "Select a valid delivery address",
       });
     }
 
-    const order = await razorpay.orders.create({
-      amount: Number(amount),
+    const address = await prisma.address.findFirst({
+      where: {
+        id: parsedAddressId,
+        user: { clerkId: req.userId },
+      },
+      select: { id: true },
+    });
+
+    if (!address) {
+      return res.status(404).json({
+        success: false,
+        msg: "Delivery address not found",
+      });
+    }
+
+    const { total } = await getCheckoutCart(prisma, req.userId);
+    const amount = Math.round(total * 100);
+
+    const order = await createRazorpayClient().orders.create({
+      amount,
       currency,
-      receipt,
+      receipt: `receipt_${Date.now()}`,
+      notes: {
+        clerkId: req.userId,
+        addressId: String(parsedAddressId),
+      },
     });
 
     return res.status(200).json({
@@ -31,6 +51,13 @@ const createRazorpayOrder = async (req, res) => {
       },
     });
   } catch (error) {
+    if (error instanceof OrderFlowError) {
+      return res.status(error.statusCode).json({
+        success: false,
+        msg: error.message,
+      });
+    }
+
     console.error("Razorpay create order error:", error);
 
     if (error?.statusCode === 401) {

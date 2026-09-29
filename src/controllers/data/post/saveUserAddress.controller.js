@@ -3,12 +3,29 @@ import prisma from "../../../lib/prisma.js";
 const saveUserAddress = async (req, res) => {
   try {
     const clerkId = req.userId;
-    const { city, pincode, country, phone, isDefault = false } = req.body;
+    const {
+      name,
+      address: streetAddress,
+      city,
+      state,
+      pincode,
+      country,
+      phone,
+      isDefault = false,
+    } = req.body;
 
-    if (!city || !pincode || !country || !phone) {
+    if (
+      !name ||
+      !streetAddress ||
+      !city ||
+      !state ||
+      !pincode ||
+      !country ||
+      !phone
+    ) {
       return res.status(400).json({
         status: "failed",
-        msg: "City, pincode, country and phone are required",
+        msg: "Complete delivery address and contact details are required",
       });
     }
 
@@ -33,7 +50,10 @@ const saveUserAddress = async (req, res) => {
 
     const address = await prisma.address.create({
       data: {
+        name,
+        address: streetAddress,
         city,
+        state,
         pincode: String(pincode),
         country,
         phone: String(phone),
@@ -44,7 +64,10 @@ const saveUserAddress = async (req, res) => {
 
     const safeAddress = {
       id: Number(address.id),
+      name: address.name,
+      address: address.address,
       city: address.city,
+      state: address.state,
       pincode: address.pincode,
       country: address.country,
       phone: address.phone,

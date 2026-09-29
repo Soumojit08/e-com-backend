@@ -29,6 +29,8 @@ router.post("/addresses", requireAuth, controllers.SaveUserAddress);
 // payment routes
 router.post("/create-order", requireAuth, controllers.CreateRazorpayOrder);
 router.post("/verify-payment", requireAuth, controllers.VerifyRazorpayPayment);
+router.post("/orders", requireAuth, controllers.PlaceOrder);
+router.get("/orders", requireAuth, controllers.GetOrders);
 
 //wishlist routes
 
